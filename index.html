@@ -1004,6 +1004,13 @@
     <script>
         let currentLang = 'fi-FI';
 
+        // Helper function to convert 24-hour to 12-hour format
+        function to12Hour(h24) {
+            if (h24 === 0) return 12;
+            if (h24 <= 12) return h24;
+            return h24 - 12;
+        }
+
         const translations = {
             'en-US': {
                 greeting: 'Hello',
@@ -1023,18 +1030,18 @@
                 min50: '50',
                 min55: '55',
                 timeText: {
-                    0: (h) => `${h} o'clock`,
-                    5: (h) => `five past ${h}`,
-                    10: (h) => `ten past ${h}`,
-                    15: (h) => `quarter past ${h}`,
-                    20: (h) => `twenty past ${h}`,
-                    25: (h) => `twenty-five past ${h}`,
-                    30: (h) => `half past ${h}`,
-                    35: (h) => `twenty-five to ${h === 23 ? 0 : h + 1}`,
-                    40: (h) => `twenty to ${h === 23 ? 0 : h + 1}`,
-                    45: (h) => `quarter to ${h === 23 ? 0 : h + 1}`,
-                    50: (h) => `ten to ${h === 23 ? 0 : h + 1}`,
-                    55: (h) => `five to ${h === 23 ? 0 : h + 1}`
+                    0: (h) => `${to12Hour(h)} o'clock`,
+                    5: (h) => `five past ${to12Hour(h)}`,
+                    10: (h) => `ten past ${to12Hour(h)}`,
+                    15: (h) => `quarter past ${to12Hour(h)}`,
+                    20: (h) => `twenty past ${to12Hour(h)}`,
+                    25: (h) => `twenty-five past ${to12Hour(h)}`,
+                    30: (h) => `half past ${to12Hour(h)}`,
+                    35: (h) => `twenty-five to ${to12Hour((h + 1) % 24)}`,
+                    40: (h) => `twenty to ${to12Hour((h + 1) % 24)}`,
+                    45: (h) => `quarter to ${to12Hour((h + 1) % 24)}`,
+                    50: (h) => `ten to ${to12Hour((h + 1) % 24)}`,
+                    55: (h) => `five to ${to12Hour((h + 1) % 24)}`
                 }
             },
             'fi-FI': {
@@ -1055,18 +1062,18 @@
                 min50: '50',
                 min55: '55',
                 timeText: {
-                    0: (h) => `kello ${h}`,
-                    5: (h) => `viisi yli ${h}`,
-                    10: (h) => `kymmenen yli ${h}`,
-                    15: (h) => `varttia yli ${h}`,
-                    20: (h) => `kaksikymmentä yli ${h}`,
-                    25: (h) => `viisi vaille puoli ${h === 23 ? 0 : h + 1}`,
-                    30: (h) => `puoli ${h === 23 ? 0 : h + 1}`,
-                    35: (h) => `viisi yli puoli ${h === 23 ? 0 : h + 1}`,
-                    40: (h) => `kaksikymmentä vaille ${h === 23 ? 0 : h + 1}`,
-                    45: (h) => `varttia vaille ${h === 23 ? 0 : h + 1}`,
-                    50: (h) => `kymmenen vaille ${h === 23 ? 0 : h + 1}`,
-                    55: (h) => `viisi vaille ${h === 23 ? 0 : h + 1}`
+                    0: (h) => `kello ${to12Hour(h)}`,
+                    5: (h) => `viisi yli ${to12Hour(h)}`,
+                    10: (h) => `kymmenen yli ${to12Hour(h)}`,
+                    15: (h) => `varttia yli ${to12Hour(h)}`,
+                    20: (h) => `kaksikymmentä yli ${to12Hour(h)}`,
+                    25: (h) => `viisi vaille puoli ${to12Hour((h + 1) % 24)}`,
+                    30: (h) => `puoli ${to12Hour((h + 1) % 24)}`,
+                    35: (h) => `viisi yli puoli ${to12Hour((h + 1) % 24)}`,
+                    40: (h) => `kaksikymmentä vaille ${to12Hour((h + 1) % 24)}`,
+                    45: (h) => `varttia vaille ${to12Hour((h + 1) % 24)}`,
+                    50: (h) => `kymmenen vaille ${to12Hour((h + 1) % 24)}`,
+                    55: (h) => `viisi vaille ${to12Hour((h + 1) % 24)}`
                 }
             },
             'nb-NO': {
@@ -1087,18 +1094,18 @@
                 min50: '50',
                 min55: '55',
                 timeText: {
-                    0: (h) => `klokken ${h}`,
-                    5: (h) => `fem over ${h}`,
-                    10: (h) => `ti over ${h}`,
-                    15: (h) => `kvart over ${h}`,
-                    20: (h) => `tjue over ${h}`,
-                    25: (h) => `fem på halv ${h === 23 ? 0 : h + 1}`,
-                    30: (h) => `halv ${h === 23 ? 0 : h + 1}`,
-                    35: (h) => `fem over halv ${h === 23 ? 0 : h + 1}`,
-                    40: (h) => `tjue på ${h === 23 ? 0 : h + 1}`,
-                    45: (h) => `kvart på ${h === 23 ? 0 : h + 1}`,
-                    50: (h) => `ti på ${h === 23 ? 0 : h + 1}`,
-                    55: (h) => `fem på ${h === 23 ? 0 : h + 1}`
+                    0: (h) => `klokken ${to12Hour(h)}`,
+                    5: (h) => `fem over ${to12Hour(h)}`,
+                    10: (h) => `ti over ${to12Hour(h)}`,
+                    15: (h) => `kvart over ${to12Hour(h)}`,
+                    20: (h) => `tjue over ${to12Hour(h)}`,
+                    25: (h) => `fem på halv ${to12Hour((h + 1) % 24)}`,
+                    30: (h) => `halv ${to12Hour((h + 1) % 24)}`,
+                    35: (h) => `fem over halv ${to12Hour((h + 1) % 24)}`,
+                    40: (h) => `tjue på ${to12Hour((h + 1) % 24)}`,
+                    45: (h) => `kvart på ${to12Hour((h + 1) % 24)}`,
+                    50: (h) => `ti på ${to12Hour((h + 1) % 24)}`,
+                    55: (h) => `fem på ${to12Hour((h + 1) % 24)}`
                 }
             }
         };
