@@ -43,6 +43,28 @@
             position: relative;
             overflow: hidden;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            transition: background 1s ease;
+        }
+
+        /* Time of day backgrounds */
+        body.time-night {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #0f2557 75%, #1e3c72 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-morning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #ffeaa7 50%, #74b9ff 75%, #a29bfe 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-day {
+            background: linear-gradient(135deg, #fddb92 0%, #d1fdff 25%, #74b9ff 50%, #a29bfe 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-evening {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 25%, #fc6076 50%, #ff9a44 75%, #fa709a 100%);
+            background-size: 400% 400%;
         }
 
         @keyframes gradientShift {
@@ -808,6 +830,7 @@
                 <div class="control-group">
                     <label for="hourSelect" id="hourLabel">Tunti:</label>
                     <select id="hourSelect" onchange="updateClock()">
+                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3" selected>3</option>
@@ -820,6 +843,17 @@
                         <option value="10">10</option>
                         <option value="11">11</option>
                         <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
                     </select>
                 </div>
 
@@ -827,9 +861,17 @@
                     <label for="minuteSelect" id="minuteLabel">Minuutit:</label>
                     <select id="minuteSelect" onchange="updateClock()">
                         <option value="0" selected id="min0">00 (tasan)</option>
+                        <option value="5" id="min5">05</option>
+                        <option value="10" id="min10">10</option>
                         <option value="15" id="min15">15 (varttia yli)</option>
+                        <option value="20" id="min20">20</option>
+                        <option value="25" id="min25">25</option>
                         <option value="30" id="min30">30 (puoli)</option>
+                        <option value="35" id="min35">35</option>
+                        <option value="40" id="min40">40</option>
                         <option value="45" id="min45">45 (varttia vaille)</option>
+                        <option value="50" id="min50">50</option>
+                        <option value="55" id="min55">55</option>
                     </select>
                 </div>
             </div>
@@ -889,13 +931,22 @@
                 minuteLabel: 'Minutes:',
                 buttonText: 'Tell me the time!',
                 min0: "00 (o'clock)",
+                min5: '05',
+                min10: '10',
                 min15: '15 (quarter past)',
+                min20: '20',
+                min25: '25',
                 min30: '30 (half past)',
+                min35: '35',
+                min40: '40',
                 min45: '45 (quarter to)',
+                min50: '50',
+                min55: '55',
                 oclock: (h) => `${h} o'clock`,
                 quarterPast: (h) => `quarter past ${h}`,
                 half: (h) => `half past ${h}`,
-                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`
+                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`,
+                timeFormat: (h, m) => m === 0 ? `${h} o'clock` : `${h} ${m}`
             },
             'fi-FI': {
                 greeting: 'Hei',
@@ -903,13 +954,22 @@
                 minuteLabel: 'Minuutit:',
                 buttonText: 'Kerro kellonaika!',
                 min0: '00 (tasan)',
+                min5: '05',
+                min10: '10',
                 min15: '15 (varttia yli)',
+                min20: '20',
+                min25: '25',
                 min30: '30 (puoli)',
+                min35: '35',
+                min40: '40',
                 min45: '45 (varttia vaille)',
+                min50: '50',
+                min55: '55',
                 oclock: (h) => `kello ${h}`,
                 quarterPast: (h) => `varttia yli ${h}`,
                 half: (h) => `puoli ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`
+                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`,
+                timeFormat: (h, m) => m === 0 ? `kello ${h}` : `${h} ja ${m} minuuttia`
             },
             'nb-NO': {
                 greeting: 'Hei',
@@ -917,13 +977,22 @@
                 minuteLabel: 'Minutter:',
                 buttonText: 'Fortell meg hva klokken er!',
                 min0: '00 (klokken)',
+                min5: '05',
+                min10: '10',
                 min15: '15 (kvart over)',
+                min20: '20',
+                min25: '25',
                 min30: '30 (halv)',
+                min35: '35',
+                min40: '40',
                 min45: '45 (kvart på)',
+                min50: '50',
+                min55: '55',
                 oclock: (h) => `klokken ${h}`,
                 quarterPast: (h) => `kvart over ${h}`,
                 half: (h) => `halv ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`
+                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`,
+                timeFormat: (h, m) => m === 0 ? `klokken ${h}` : `${h} og ${m} minutter`
             }
         };
 
@@ -955,9 +1024,17 @@
             document.getElementById('minuteLabel').textContent = trans.minuteLabel;
             document.getElementById('buttonText').textContent = trans.buttonText;
             document.getElementById('min0').textContent = trans.min0;
+            document.getElementById('min5').textContent = trans.min5;
+            document.getElementById('min10').textContent = trans.min10;
             document.getElementById('min15').textContent = trans.min15;
+            document.getElementById('min20').textContent = trans.min20;
+            document.getElementById('min25').textContent = trans.min25;
             document.getElementById('min30').textContent = trans.min30;
+            document.getElementById('min35').textContent = trans.min35;
+            document.getElementById('min40').textContent = trans.min40;
             document.getElementById('min45').textContent = trans.min45;
+            document.getElementById('min50').textContent = trans.min50;
+            document.getElementById('min55').textContent = trans.min55;
         }
 
         const hourHand = document.getElementById('hourHand');
@@ -986,6 +1063,20 @@
             // Update digital clock display
             document.getElementById('digitalHour').textContent = hour.toString().padStart(2, '0');
             document.getElementById('digitalMinute').textContent = minutes.toString().padStart(2, '0');
+
+            // Update background based on time of day
+            const body = document.body;
+            body.classList.remove('time-night', 'time-morning', 'time-day', 'time-evening');
+
+            if (hour >= 0 && hour < 6) {
+                body.classList.add('time-night');
+            } else if (hour >= 6 && hour < 12) {
+                body.classList.add('time-morning');
+            } else if (hour >= 12 && hour < 18) {
+                body.classList.add('time-day');
+            } else if (hour >= 18 && hour < 24) {
+                body.classList.add('time-evening');
+            }
         }
 
         const minuteToFunc = { 0: 'oclock', 15: 'quarterPast', 30: 'half', 45: 'quarterTo' };
@@ -993,7 +1084,14 @@
         function tellTime() {
             const hour = parseInt(document.getElementById('hourSelect').value);
             const minutes = parseInt(document.getElementById('minuteSelect').value);
-            const timeText = translations[currentLang][minuteToFunc[minutes]](hour);
+
+            // Use special phrases for 0, 15, 30, 45 if they exist, otherwise use generic format
+            let timeText;
+            if (minuteToFunc[minutes]) {
+                timeText = translations[currentLang][minuteToFunc[minutes]](hour);
+            } else {
+                timeText = translations[currentLang].timeFormat(hour, minutes);
+            }
 
             const utterance = new SpeechSynthesisUtterance(timeText);
             utterance.lang = currentLang;
