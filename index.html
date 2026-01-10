@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Learn the Clock</title>
 
     <!-- PWA Meta Tags -->
@@ -35,12 +35,14 @@
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #2d3436;
             position: relative;
             overflow: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         @keyframes gradientShift {
@@ -451,6 +453,33 @@
             background: linear-gradient(135deg, #48dbfb 0%, #1dd1a1 100%);
         }
 
+        .language-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            font-size: 1.8em;
+            padding: 8px 12px;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.15);
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .lang-btn.active {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.3);
+        }
+
         /* Fun decorative elements */
         .star {
             position: absolute;
@@ -519,6 +548,16 @@
 
             .flag-button.active {
                 transform: scale(1.2);
+            }
+
+            .language-switcher {
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .lang-btn {
+                font-size: 1.4em;
+                padding: 6px 10px;
             }
 
             label {
@@ -642,6 +681,16 @@
                 border: 3px solid transparent;
             }
 
+            .language-switcher {
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+
+            .lang-btn {
+                font-size: 1.2em;
+                padding: 5px 8px;
+            }
+
             .control-group {
                 gap: 5px;
             }
@@ -747,6 +796,12 @@
         </div>
 
         <div id="gameScreen" class="game-screen hidden">
+            <div class="language-switcher">
+                <button class="lang-btn" onclick="switchLanguage('fi-FI')" data-lang="fi-FI">🇫🇮</button>
+                <button class="lang-btn" onclick="switchLanguage('en-US')" data-lang="en-US">🇬🇧</button>
+                <button class="lang-btn" onclick="switchLanguage('nb-NO')" data-lang="nb-NO">🇳🇴</button>
+            </div>
+
             <div class="greeting"><span id="greetingText">Hei</span>! 👋</div>
 
             <div class="controls">
@@ -874,18 +929,23 @@
 
         function selectLanguage(lang) {
             currentLang = lang;
-
-            // Update active flag button
-            document.querySelectorAll('.flag-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-
-            // Start game immediately
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
+            updateLanguageButtons();
             updateUIText();
             updateClock();
+        }
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            updateLanguageButtons();
+            updateUIText();
+        }
+
+        function updateLanguageButtons() {
+            document.querySelectorAll('.flag-button, .lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
         }
 
         function updateUIText() {
@@ -928,21 +988,12 @@
             document.getElementById('digitalMinute').textContent = minutes.toString().padStart(2, '0');
         }
 
+        const minuteToFunc = { 0: 'oclock', 15: 'quarterPast', 30: 'half', 45: 'quarterTo' };
+
         function tellTime() {
             const hour = parseInt(document.getElementById('hourSelect').value);
             const minutes = parseInt(document.getElementById('minuteSelect').value);
-            const trans = translations[currentLang];
-
-            let timeText;
-            if (minutes === 0) {
-                timeText = trans.oclock(hour);
-            } else if (minutes === 15) {
-                timeText = trans.quarterPast(hour);
-            } else if (minutes === 30) {
-                timeText = trans.half(hour);
-            } else if (minutes === 45) {
-                timeText = trans.quarterTo(hour);
-            }
+            const timeText = translations[currentLang][minuteToFunc[minutes]](hour);
 
             const utterance = new SpeechSynthesisUtterance(timeText);
             utterance.lang = currentLang;
