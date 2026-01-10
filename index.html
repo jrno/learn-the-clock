@@ -1011,6 +1011,24 @@
             return h24 - 12;
         }
 
+        // Helper function to get time period based on hour
+        function getTimePeriod(hour) {
+            if (hour >= 22 || hour < 6) return 'night';      // 22:00-05:59
+            if (hour >= 6 && hour < 12) return 'morning';    // 06:00-11:59
+            if (hour >= 12 && hour < 18) return 'afternoon'; // 12:00-17:59
+            return 'evening';                                 // 18:00-21:59
+        }
+
+        // Helper function to convert numbers to Finnish words
+        function toFinnishWord(num) {
+            const words = {
+                1: 'yksi', 2: 'kaksi', 3: 'kolme', 4: 'neljä',
+                5: 'viisi', 6: 'kuusi', 7: 'seitsemän', 8: 'kahdeksan',
+                9: 'yhdeksän', 10: 'kymmenen', 11: 'yksitoista', 12: 'kaksitoista'
+            };
+            return words[num] || num.toString();
+        }
+
         const translations = {
             'en-US': {
                 greeting: 'Hello',
@@ -1029,19 +1047,25 @@
                 min45: '45 (quarter to)',
                 min50: '50',
                 min55: '55',
+                timePeriods: {
+                    night: 'at night',
+                    morning: 'in the morning',
+                    afternoon: 'in the afternoon',
+                    evening: 'in the evening'
+                },
                 timeText: {
-                    0: (h) => `${to12Hour(h)} o'clock`,
-                    5: (h) => `five past ${to12Hour(h)}`,
-                    10: (h) => `ten past ${to12Hour(h)}`,
-                    15: (h) => `quarter past ${to12Hour(h)}`,
-                    20: (h) => `twenty past ${to12Hour(h)}`,
-                    25: (h) => `twenty-five past ${to12Hour(h)}`,
-                    30: (h) => `half past ${to12Hour(h)}`,
-                    35: (h) => `twenty-five to ${to12Hour((h + 1) % 24)}`,
-                    40: (h) => `twenty to ${to12Hour((h + 1) % 24)}`,
-                    45: (h) => `quarter to ${to12Hour((h + 1) % 24)}`,
-                    50: (h) => `ten to ${to12Hour((h + 1) % 24)}`,
-                    55: (h) => `five to ${to12Hour((h + 1) % 24)}`
+                    0: (h) => `${to12Hour(h)} o'clock ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `five past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `ten past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `quarter past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `twenty past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `twenty-five past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `half past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `twenty-five to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `twenty to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `quarter to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `ten to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `five to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`
                 }
             },
             'fi-FI': {
@@ -1061,19 +1085,25 @@
                 min45: '45 (varttia vaille)',
                 min50: '50',
                 min55: '55',
+                timePeriods: {
+                    night: 'yöllä',
+                    morning: 'aamulla',
+                    afternoon: 'iltapäivällä',
+                    evening: 'illalla'
+                },
                 timeText: {
-                    0: (h) => `kello ${to12Hour(h)}`,
-                    5: (h) => `viisi yli ${to12Hour(h)}`,
-                    10: (h) => `kymmenen yli ${to12Hour(h)}`,
-                    15: (h) => `varttia yli ${to12Hour(h)}`,
-                    20: (h) => `kaksikymmentä yli ${to12Hour(h)}`,
-                    25: (h) => `viisi vaille puoli ${to12Hour((h + 1) % 24)}`,
-                    30: (h) => `puoli ${to12Hour((h + 1) % 24)}`,
-                    35: (h) => `viisi yli puoli ${to12Hour((h + 1) % 24)}`,
-                    40: (h) => `kaksikymmentä vaille ${to12Hour((h + 1) % 24)}`,
-                    45: (h) => `varttia vaille ${to12Hour((h + 1) % 24)}`,
-                    50: (h) => `kymmenen vaille ${to12Hour((h + 1) % 24)}`,
-                    55: (h) => `viisi vaille ${to12Hour((h + 1) % 24)}`
+                    0: (h) => `kello ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `viisi yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `kymmenen yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `varttia yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `kaksikymmentä yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `viisi vaille puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `viisi yli puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `kaksikymmentä vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `varttia vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `kymmenen vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `viisi vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`
                 }
             },
             'nb-NO': {
@@ -1093,19 +1123,25 @@
                 min45: '45 (kvart på)',
                 min50: '50',
                 min55: '55',
+                timePeriods: {
+                    night: 'om natten',
+                    morning: 'om morgenen',
+                    afternoon: 'om ettermiddagen',
+                    evening: 'om kvelden'
+                },
                 timeText: {
-                    0: (h) => `klokken ${to12Hour(h)}`,
-                    5: (h) => `fem over ${to12Hour(h)}`,
-                    10: (h) => `ti over ${to12Hour(h)}`,
-                    15: (h) => `kvart over ${to12Hour(h)}`,
-                    20: (h) => `tjue over ${to12Hour(h)}`,
-                    25: (h) => `fem på halv ${to12Hour((h + 1) % 24)}`,
-                    30: (h) => `halv ${to12Hour((h + 1) % 24)}`,
-                    35: (h) => `fem over halv ${to12Hour((h + 1) % 24)}`,
-                    40: (h) => `tjue på ${to12Hour((h + 1) % 24)}`,
-                    45: (h) => `kvart på ${to12Hour((h + 1) % 24)}`,
-                    50: (h) => `ti på ${to12Hour((h + 1) % 24)}`,
-                    55: (h) => `fem på ${to12Hour((h + 1) % 24)}`
+                    0: (h) => `klokken ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `fem over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `ti over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `kvart over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `tjue over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `fem på halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `fem over halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `tjue på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `kvart på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `ti på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `fem på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`
                 }
             }
         };
@@ -1182,13 +1218,13 @@
             const body = document.body;
             body.classList.remove('time-night', 'time-morning', 'time-day', 'time-evening');
 
-            if (hour >= 0 && hour < 6) {
+            if (hour >= 22 || hour < 6) {
                 body.classList.add('time-night');
             } else if (hour >= 6 && hour < 12) {
                 body.classList.add('time-morning');
             } else if (hour >= 12 && hour < 18) {
                 body.classList.add('time-day');
-            } else if (hour >= 18 && hour < 24) {
+            } else if (hour >= 18 && hour < 22) {
                 body.classList.add('time-evening');
             }
         }
