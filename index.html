@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn the Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-screen, .game-screen {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            font-size: 1.5em;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            margin: 10px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        button {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            font-family: inherit;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .clock-container {
+            margin: 30px auto;
+            position: relative;
+        }
+
+        #clock {
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .clock-number {
+            fill: #333;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .hour-hand {
+            stroke: #f5576c;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .minute-hand {
+            stroke: #4facfe;
+            stroke-width: 6;
+            stroke-linecap: round;
+        }
+
+        .center-dot {
+            fill: #333;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        select {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            margin: 10px;
+            font-family: inherit;
+        }
+
+        label {
+            font-size: 1.2em;
+            margin: 0 10px;
+        }
+
+        .greeting {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="welcomeScreen" class="welcome-screen">
+            <h1>🕐 Learn the Clock! 🕐</h1>
+            <input type="text" id="nameInput" placeholder="What's your name?" autofocus>
+            <br>
+            <button onclick="startGame()">Start Playing!</button>
+        </div>
+
+        <div id="gameScreen" class="game-screen hidden">
+            <div class="greeting">Hello, <span id="playerName"></span>! 👋</div>
+            
+            <div class="controls">
+                <select id="languageSelect" onchange="changeLanguage()">
+                    <option value="en-US">English</option>
+                    <option value="fi-FI">Suomi</option>
+                    <option value="nb-NO">Norsk</option>
+                </select>
+            </div>
+
+            <div class="controls">
+                <label for="hourSelect">Hour:</label>
+                <select id="hourSelect" onchange="updateClock()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+
+                <label for="minuteSelect">Minutes:</label>
+                <select id="minuteSelect" onchange="updateClock()">
+                    <option value="0" selected>00 (o'clock)</option>
+                    <option value="15">15 (quarter past)</option>
+                    <option value="30">30 (half past)</option>
+                    <option value="45">45 (quarter to)</option>
+                </select>
+            </div>
+
+            <div class="clock-container">
+                <svg id="clock" width="400" height="400" viewBox="0 0 400 400">
+                    <circle cx="200" cy="200" r="190" fill="white" stroke="#333" stroke-width="4"/>
+                    
+                    <!-- Clock numbers -->
+                    <text x="200" y="60" text-anchor="middle" class="clock-number">12</text>
+                    <text x="285" y="90" text-anchor="middle" class="clock-number">1</text>
+                    <text x="345" y="140" text-anchor="middle" class="clock-number">2</text>
+                    <text x="370" y="210" text-anchor="middle" class="clock-number">3</text>
+                    <text x="345" y="280" text-anchor="middle" class="clock-number">4</text>
+                    <text x="285" y="330" text-anchor="middle" class="clock-number">5</text>
+                    <text x="200" y="360" text-anchor="middle" class="clock-number">6</text>
+                    <text x="115" y="330" text-anchor="middle" class="clock-number">7</text>
+                    <text x="55" y="280" text-anchor="middle" class="clock-number">8</text>
+                    <text x="30" y="210" text-anchor="middle" class="clock-number">9</text>
+                    <text x="55" y="140" text-anchor="middle" class="clock-number">10</text>
+                    <text x="115" y="90" text-anchor="middle" class="clock-number">11</text>
+
+                    <!-- Minute hand (longer, blue) -->
+                    <line id="minuteHand" x1="200" y1="200" x2="200" y2="70" 
+                          class="minute-hand"/>
+                    
+                    <!-- Hour hand (shorter, red) -->
+                    <line id="hourHand" x1="200" y1="200" x2="200" y2="110" 
+                          class="hour-hand"/>
+                    
+                    <!-- Center dot -->
+                    <circle cx="200" cy="200" r="12" class="center-dot"/>
+                </svg>
+            </div>
+
+            <div class="controls">
+                <button onclick="tellTime()">🔊 Tell me the time!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let playerName = '';
+        let currentLang = 'en-US';
+
+        const translations = {
+            'en-US': {
+                oclock: (h) => `${h} o'clock`,
+                quarterPast: (h) => `quarter past ${h}`,
+                half: (h) => `half past ${h}`,
+                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`
+            },
+            'fi-FI': {
+                oclock: (h) => `kello ${h}`,
+                quarterPast: (h) => `varttia yli ${h}`,
+                half: (h) => `puoli ${h === 12 ? 1 : h + 1}`,
+                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`
+            },
+            'nb-NO': {
+                oclock: (h) => `klokken ${h}`,
+                quarterPast: (h) => `kvart over ${h}`,
+                half: (h) => `halv ${h === 12 ? 1 : h + 1}`,
+                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`
+            }
+        };
+
+        function startGame() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('Please enter your name!');
+                return;
+            }
+            playerName = name;
+            document.getElementById('playerName').textContent = playerName;
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            updateClock();
+        }
+
+        function changeLanguage() {
+            currentLang = document.getElementById('languageSelect').value;
+        }
+
+        const hourHand = document.getElementById('hourHand');
+        const minuteHand = document.getElementById('minuteHand');
+        const centerX = 200;
+        const centerY = 200;
+
+        function setHandPosition(hand, angle, length) {
+            const radians = (angle - 90) * (Math.PI / 180);
+            const x = centerX + length * Math.cos(radians);
+            const y = centerY + length * Math.sin(radians);
+            hand.setAttribute('x2', x);
+            hand.setAttribute('y2', y);
+        }
+
+        function updateClock() {
+            const hour = parseInt(document.getElementById('hourSelect').value);
+            const minutes = parseInt(document.getElementById('minuteSelect').value);
+            
+            const minuteAngle = minutes * 6;
+            setHandPosition(minuteHand, minuteAngle, 130);
+            
+            const hourAngle = (hour % 12) * 30 + (minutes / 60) * 30;
+            setHandPosition(hourHand, hourAngle, 90);
+        }
+
+        function tellTime() {
+            const hour = parseInt(document.getElementById('hourSelect').value);
+            const minutes = parseInt(document.getElementById('minuteSelect').value);
+            const trans = translations[currentLang];
+            
+            let timeText;
+            if (minutes === 0) {
+                timeText = trans.oclock(hour);
+            } else if (minutes === 15) {
+                timeText = trans.quarterPast(hour);
+            } else if (minutes === 30) {
+                timeText = trans.half(hour);
+            } else if (minutes === 45) {
+                timeText = trans.quarterTo(hour);
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(timeText);
+            utterance.lang = currentLang;
+            utterance.rate = 0.9;
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>
