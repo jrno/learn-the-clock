@@ -1013,10 +1013,10 @@
 
         // Helper function to get time period based on hour
         function getTimePeriod(hour) {
-            if (hour >= 0 && hour < 6) return 'night';
-            if (hour >= 6 && hour < 12) return 'morning';
-            if (hour >= 12 && hour < 18) return 'afternoon';
-            return 'evening'; // 18-23
+            if (hour >= 22 || hour < 6) return 'night';      // 22:00-05:59
+            if (hour >= 6 && hour < 12) return 'morning';    // 06:00-11:59
+            if (hour >= 12 && hour < 18) return 'afternoon'; // 12:00-17:59
+            return 'evening';                                 // 18:00-21:59
         }
 
         // Helper function to convert numbers to Finnish words
@@ -1218,13 +1218,13 @@
             const body = document.body;
             body.classList.remove('time-night', 'time-morning', 'time-day', 'time-evening');
 
-            if (hour >= 0 && hour < 6) {
+            if (hour >= 22 || hour < 6) {
                 body.classList.add('time-night');
             } else if (hour >= 6 && hour < 12) {
                 body.classList.add('time-morning');
             } else if (hour >= 12 && hour < 18) {
                 body.classList.add('time-day');
-            } else if (hour >= 18 && hour < 24) {
+            } else if (hour >= 18 && hour < 22) {
                 body.classList.add('time-evening');
             }
         }
