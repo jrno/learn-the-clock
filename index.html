@@ -1019,6 +1019,16 @@
             return 'evening'; // 18-23
         }
 
+        // Helper function to convert numbers to Finnish words
+        function toFinnishWord(num) {
+            const words = {
+                1: 'yksi', 2: 'kaksi', 3: 'kolme', 4: 'neljä',
+                5: 'viisi', 6: 'kuusi', 7: 'seitsemän', 8: 'kahdeksan',
+                9: 'yhdeksän', 10: 'kymmenen', 11: 'yksitoista', 12: 'kaksitoista'
+            };
+            return words[num] || num.toString();
+        }
+
         const translations = {
             'en-US': {
                 greeting: 'Hello',
@@ -1082,18 +1092,18 @@
                     evening: 'illalla'
                 },
                 timeText: {
-                    0: (h) => `kello ${to12Hour(h)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    5: (h) => `viisi yli ${to12Hour(h)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    10: (h) => `kymmenen yli ${to12Hour(h)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    15: (h) => `varttia yli ${to12Hour(h)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    20: (h) => `kaksikymmentä yli ${to12Hour(h)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    25: (h) => `viisi vaille puoli ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    30: (h) => `puoli ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    35: (h) => `viisi yli puoli ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    40: (h) => `kaksikymmentä vaille ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    45: (h) => `varttia vaille ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    50: (h) => `kymmenen vaille ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
-                    55: (h) => `viisi vaille ${to12Hour((h + 1) % 24)} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`
+                    0: (h) => `kello ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `viisi yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `kymmenen yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `varttia yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `kaksikymmentä yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `viisi vaille puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `viisi yli puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `kaksikymmentä vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `varttia vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `kymmenen vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `viisi vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`
                 }
             },
             'nb-NO': {
