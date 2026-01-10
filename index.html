@@ -448,21 +448,17 @@
             <span class="star">💫</span>
 
             <h1>🕐 Learn the Clock! 🕐</h1>
-            <p class="welcome-subtitle">Choose your language and let's have fun!</p>
+            <p class="welcome-subtitle">Choose your language to start!</p>
 
             <div class="language-selector">
                 <button class="flag-button" onclick="selectLanguage('fi-FI')" data-lang="fi-FI">🇫🇮</button>
                 <button class="flag-button" onclick="selectLanguage('en-US')" data-lang="en-US">🇬🇧</button>
                 <button class="flag-button" onclick="selectLanguage('nb-NO')" data-lang="nb-NO">🇳🇴</button>
             </div>
-
-            <input type="text" id="nameInput" placeholder="What's your name?" autofocus>
-            <br>
-            <button onclick="startGame()">Start Playing! 🚀</button>
         </div>
 
         <div id="gameScreen" class="game-screen hidden">
-            <div class="greeting"><span id="greetingText">Hei</span>, <span id="playerName"></span>! 👋</div>
+            <div class="greeting"><span id="greetingText">Hei</span>! 👋</div>
 
             <div class="controls">
                 <label for="hourSelect" id="hourLabel">Tunti:</label>
@@ -536,9 +532,7 @@
     </div>
 
     <script>
-        let playerName = '';
         let currentLang = 'fi-FI';
-        let selectedLanguage = null;
 
         const translations = {
             'en-US': {
@@ -553,9 +547,7 @@
                 oclock: (h) => `${h} o'clock`,
                 quarterPast: (h) => `quarter past ${h}`,
                 half: (h) => `half past ${h}`,
-                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`,
-                enterName: 'Please enter your name!',
-                selectLang: 'Please select a language first!'
+                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`
             },
             'fi-FI': {
                 greeting: 'Hei',
@@ -569,9 +561,7 @@
                 oclock: (h) => `kello ${h}`,
                 quarterPast: (h) => `varttia yli ${h}`,
                 half: (h) => `puoli ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`,
-                enterName: 'Kirjoita nimesi!',
-                selectLang: 'Valitse ensin kieli!'
+                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`
             },
             'nb-NO': {
                 greeting: 'Hei',
@@ -585,14 +575,11 @@
                 oclock: (h) => `klokken ${h}`,
                 quarterPast: (h) => `kvart over ${h}`,
                 half: (h) => `halv ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`,
-                enterName: 'Vennligst skriv inn navnet ditt!',
-                selectLang: 'Velg et språk først!'
+                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`
             }
         };
 
         function selectLanguage(lang) {
-            selectedLanguage = lang;
             currentLang = lang;
 
             // Update active flag button
@@ -600,23 +587,8 @@
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-        }
 
-        function startGame() {
-            const name = document.getElementById('nameInput').value.trim();
-
-            if (!selectedLanguage) {
-                alert(translations[currentLang].selectLang);
-                return;
-            }
-
-            if (!name) {
-                alert(translations[currentLang].enterName);
-                return;
-            }
-
-            playerName = name;
-            document.getElementById('playerName').textContent = playerName;
+            // Start game immediately
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
             updateUIText();
