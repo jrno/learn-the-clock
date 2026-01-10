@@ -455,6 +455,254 @@
         .welcome-screen .star:nth-child(2) { top: 15%; right: 10%; animation-delay: 0.5s; }
         .welcome-screen .star:nth-child(3) { bottom: 20%; left: 8%; animation-delay: 1s; }
         .welcome-screen .star:nth-child(4) { bottom: 15%; right: 5%; animation-delay: 1.5s; }
+
+        /* Mobile Responsive Design - Mobile First Approach */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+                width: 100%;
+            }
+
+            .welcome-screen, .game-screen {
+                padding: 25px 20px;
+                border-radius: 20px;
+                border: 3px solid #fff;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+
+            .welcome-subtitle {
+                font-size: 1em;
+                margin-bottom: 20px;
+            }
+
+            .greeting {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+
+            .language-selector {
+                gap: 15px;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                flex-wrap: wrap;
+            }
+
+            .flag-button {
+                font-size: 2.5em;
+                padding: 15px 25px;
+                border-radius: 15px;
+            }
+
+            .flag-button:hover {
+                transform: scale(1.15) rotate(5deg);
+            }
+
+            .flag-button.active {
+                transform: scale(1.2);
+            }
+
+            label {
+                font-size: 1em;
+                margin: 0 5px;
+                display: inline-block;
+            }
+
+            select {
+                font-size: 1em;
+                padding: 10px 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
+
+            .controls {
+                margin-top: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .clocks-container {
+                flex-direction: column;
+                gap: 20px;
+                margin: 20px 0;
+            }
+
+            .digital-clock {
+                padding: 20px 30px;
+                border-radius: 15px;
+                width: 100%;
+                max-width: 280px;
+                border: 3px solid #48dbfb;
+            }
+
+            .digital-time {
+                font-size: 2.5em;
+                letter-spacing: 0.1em;
+            }
+
+            #clock {
+                max-width: 280px;
+                height: auto;
+                border: 5px solid #ff6b6b;
+            }
+
+            .clock-container {
+                margin: 20px auto;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .clock-number {
+                font-size: 22px;
+            }
+
+            button {
+                font-size: 1.1em;
+                padding: 12px 30px;
+                margin: 5px;
+            }
+
+            .speak-button {
+                font-size: 1.2em;
+                padding: 15px 35px;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            input {
+                font-size: 1.1em;
+                padding: 12px 20px;
+                margin: 5px;
+            }
+
+            .star {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Extra small mobile devices */
+        @media screen and (max-width: 480px) {
+            .welcome-screen, .game-screen {
+                padding: 20px 15px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.9em;
+                margin-bottom: 15px;
+            }
+
+            .greeting {
+                font-size: 1.1em;
+                margin-bottom: 15px;
+            }
+
+            .language-selector {
+                gap: 10px;
+            }
+
+            .flag-button {
+                font-size: 2em;
+                padding: 12px 20px;
+                border-radius: 12px;
+                border: 3px solid transparent;
+            }
+
+            label {
+                font-size: 0.9em;
+                margin: 0 3px;
+            }
+
+            select {
+                font-size: 0.9em;
+                padding: 8px 12px;
+                margin: 3px;
+                border: 2px solid #1dd1a1;
+            }
+
+            .digital-clock {
+                padding: 15px 20px;
+                max-width: 240px;
+            }
+
+            .digital-time {
+                font-size: 2em;
+            }
+
+            #clock {
+                max-width: 240px;
+            }
+
+            .clock-container {
+                max-width: 240px;
+            }
+
+            .clock-number {
+                font-size: 18px;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 10px 25px;
+            }
+
+            .speak-button {
+                font-size: 1.1em;
+                padding: 12px 25px;
+                max-width: 240px;
+            }
+
+            .star {
+                font-size: 1.2em;
+            }
+
+            .hour-hand {
+                stroke-width: 8;
+            }
+
+            .minute-hand {
+                stroke-width: 6;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .clocks-container {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .digital-clock, .clock-container {
+                max-width: 200px;
+            }
+
+            .digital-time {
+                font-size: 1.8em;
+            }
+
+            #clock {
+                max-width: 200px;
+            }
+
+            .welcome-screen, .game-screen {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
