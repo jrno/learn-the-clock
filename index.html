@@ -241,6 +241,18 @@
 
         .controls {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
         }
 
         select {
@@ -511,14 +523,14 @@
 
             label {
                 font-size: 1em;
-                margin: 0 5px;
+                margin: 0;
                 display: inline-block;
             }
 
             select {
                 font-size: 1em;
                 padding: 10px 15px;
-                margin: 5px;
+                margin: 0;
                 border-radius: 15px;
             }
 
@@ -529,6 +541,13 @@
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
+            }
+
+            .control-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: nowrap;
             }
 
             .clocks-container {
@@ -623,15 +642,19 @@
                 border: 3px solid transparent;
             }
 
+            .control-group {
+                gap: 5px;
+            }
+
             label {
                 font-size: 0.9em;
-                margin: 0 3px;
+                margin: 0;
             }
 
             select {
                 font-size: 0.9em;
                 padding: 8px 12px;
-                margin: 3px;
+                margin: 0;
                 border: 2px solid #1dd1a1;
             }
 
@@ -727,29 +750,33 @@
             <div class="greeting"><span id="greetingText">Hei</span>! 👋</div>
 
             <div class="controls">
-                <label for="hourSelect" id="hourLabel">Tunti:</label>
-                <select id="hourSelect" onchange="updateClock()">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3" selected>3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                </select>
+                <div class="control-group">
+                    <label for="hourSelect" id="hourLabel">Tunti:</label>
+                    <select id="hourSelect" onchange="updateClock()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
 
-                <label for="minuteSelect" id="minuteLabel">Minuutit:</label>
-                <select id="minuteSelect" onchange="updateClock()">
-                    <option value="0" selected id="min0">00 (tasan)</option>
-                    <option value="15" id="min15">15 (varttia yli)</option>
-                    <option value="30" id="min30">30 (puoli)</option>
-                    <option value="45" id="min45">45 (varttia vaille)</option>
-                </select>
+                <div class="control-group">
+                    <label for="minuteSelect" id="minuteLabel">Minuutit:</label>
+                    <select id="minuteSelect" onchange="updateClock()">
+                        <option value="0" selected id="min0">00 (tasan)</option>
+                        <option value="15" id="min15">15 (varttia yli)</option>
+                        <option value="30" id="min30">30 (puoli)</option>
+                        <option value="45" id="min45">45 (varttia vaille)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="clocks-container">
