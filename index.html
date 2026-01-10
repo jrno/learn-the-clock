@@ -942,11 +942,20 @@
                 min45: '45 (quarter to)',
                 min50: '50',
                 min55: '55',
-                oclock: (h) => `${h} o'clock`,
-                quarterPast: (h) => `quarter past ${h}`,
-                half: (h) => `half past ${h}`,
-                quarterTo: (h) => `quarter to ${h === 12 ? 1 : h + 1}`,
-                timeFormat: (h, m) => m === 0 ? `${h} o'clock` : `${h} ${m}`
+                timeText: {
+                    0: (h) => `${h} o'clock`,
+                    5: (h) => `five past ${h}`,
+                    10: (h) => `ten past ${h}`,
+                    15: (h) => `quarter past ${h}`,
+                    20: (h) => `twenty past ${h}`,
+                    25: (h) => `twenty-five past ${h}`,
+                    30: (h) => `half past ${h}`,
+                    35: (h) => `twenty-five to ${h === 23 ? 0 : h + 1}`,
+                    40: (h) => `twenty to ${h === 23 ? 0 : h + 1}`,
+                    45: (h) => `quarter to ${h === 23 ? 0 : h + 1}`,
+                    50: (h) => `ten to ${h === 23 ? 0 : h + 1}`,
+                    55: (h) => `five to ${h === 23 ? 0 : h + 1}`
+                }
             },
             'fi-FI': {
                 greeting: 'Hei',
@@ -965,11 +974,20 @@
                 min45: '45 (varttia vaille)',
                 min50: '50',
                 min55: '55',
-                oclock: (h) => `kello ${h}`,
-                quarterPast: (h) => `varttia yli ${h}`,
-                half: (h) => `puoli ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `varttia vaille ${h === 12 ? 1 : h + 1}`,
-                timeFormat: (h, m) => m === 0 ? `kello ${h}` : `${h} ja ${m} minuuttia`
+                timeText: {
+                    0: (h) => `kello ${h}`,
+                    5: (h) => `viisi yli ${h}`,
+                    10: (h) => `kymmenen yli ${h}`,
+                    15: (h) => `varttia yli ${h}`,
+                    20: (h) => `kaksikymmentä yli ${h}`,
+                    25: (h) => `viisi vaille puoli ${h === 23 ? 0 : h + 1}`,
+                    30: (h) => `puoli ${h === 23 ? 0 : h + 1}`,
+                    35: (h) => `viisi yli puoli ${h === 23 ? 0 : h + 1}`,
+                    40: (h) => `kaksikymmentä vaille ${h === 23 ? 0 : h + 1}`,
+                    45: (h) => `varttia vaille ${h === 23 ? 0 : h + 1}`,
+                    50: (h) => `kymmenen vaille ${h === 23 ? 0 : h + 1}`,
+                    55: (h) => `viisi vaille ${h === 23 ? 0 : h + 1}`
+                }
             },
             'nb-NO': {
                 greeting: 'Hei',
@@ -988,11 +1006,20 @@
                 min45: '45 (kvart på)',
                 min50: '50',
                 min55: '55',
-                oclock: (h) => `klokken ${h}`,
-                quarterPast: (h) => `kvart over ${h}`,
-                half: (h) => `halv ${h === 12 ? 1 : h + 1}`,
-                quarterTo: (h) => `kvart på ${h === 12 ? 1 : h + 1}`,
-                timeFormat: (h, m) => m === 0 ? `klokken ${h}` : `${h} og ${m} minutter`
+                timeText: {
+                    0: (h) => `klokken ${h}`,
+                    5: (h) => `fem over ${h}`,
+                    10: (h) => `ti over ${h}`,
+                    15: (h) => `kvart over ${h}`,
+                    20: (h) => `tjue over ${h}`,
+                    25: (h) => `fem på halv ${h === 23 ? 0 : h + 1}`,
+                    30: (h) => `halv ${h === 23 ? 0 : h + 1}`,
+                    35: (h) => `fem over halv ${h === 23 ? 0 : h + 1}`,
+                    40: (h) => `tjue på ${h === 23 ? 0 : h + 1}`,
+                    45: (h) => `kvart på ${h === 23 ? 0 : h + 1}`,
+                    50: (h) => `ti på ${h === 23 ? 0 : h + 1}`,
+                    55: (h) => `fem på ${h === 23 ? 0 : h + 1}`
+                }
             }
         };
 
@@ -1079,19 +1106,12 @@
             }
         }
 
-        const minuteToFunc = { 0: 'oclock', 15: 'quarterPast', 30: 'half', 45: 'quarterTo' };
-
         function tellTime() {
             const hour = parseInt(document.getElementById('hourSelect').value);
             const minutes = parseInt(document.getElementById('minuteSelect').value);
 
-            // Use special phrases for 0, 15, 30, 45 if they exist, otherwise use generic format
-            let timeText;
-            if (minuteToFunc[minutes]) {
-                timeText = translations[currentLang][minuteToFunc[minutes]](hour);
-            } else {
-                timeText = translations[currentLang].timeFormat(hour, minutes);
-            }
+            // Get natural language time text for the current language
+            const timeText = translations[currentLang].timeText[minutes](hour);
 
             const utterance = new SpeechSynthesisUtterance(timeText);
             utterance.lang = currentLang;
