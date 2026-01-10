@@ -131,6 +131,34 @@
             font-size: 1.5em;
             margin-bottom: 20px;
         }
+
+        .digital-clock {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 20px 40px;
+            margin: 20px auto;
+            display: inline-block;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid #333;
+        }
+
+        .digital-time {
+            font-family: 'Courier New', monospace;
+            font-size: 4em;
+            font-weight: bold;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            letter-spacing: 0.1em;
+        }
+
+        .time-separator {
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.3; }
+        }
     </style>
 </head>
 <body>
@@ -151,6 +179,12 @@
                     <option value="fi-FI">Suomi</option>
                     <option value="nb-NO">Norsk</option>
                 </select>
+            </div>
+
+            <div class="digital-clock">
+                <div class="digital-time">
+                    <span id="digitalHour">03</span><span class="time-separator">:</span><span id="digitalMinute">00</span>
+                </div>
             </div>
 
             <div class="controls">
@@ -274,12 +308,16 @@
         function updateClock() {
             const hour = parseInt(document.getElementById('hourSelect').value);
             const minutes = parseInt(document.getElementById('minuteSelect').value);
-            
+
             const minuteAngle = minutes * 6;
             setHandPosition(minuteHand, minuteAngle, 130);
-            
+
             const hourAngle = (hour % 12) * 30 + (minutes / 60) * 30;
             setHandPosition(hourHand, hourAngle, 90);
+
+            // Update digital clock display
+            document.getElementById('digitalHour').textContent = hour.toString().padStart(2, '0');
+            document.getElementById('digitalMinute').textContent = minutes.toString().padStart(2, '0');
         }
 
         function tellTime() {
