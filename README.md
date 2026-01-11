@@ -1,6 +1,6 @@
 # Learn the Clock 🕐
 
-A simple, colorful web game to help kids learn to tell time on an analog clock. Now available as a Progressive Web App (PWA) that can be installed on your device
+A simple, colorful web game to help kids learn to tell time on an analog clock. Now available as a Progressive Web App (PWA) that can be installed on your device.
 
 ## Features
 
