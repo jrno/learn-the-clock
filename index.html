@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Learn the Clock</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="A colorful web game to help kids learn to tell time on an analog clock">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Clock Game">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 20%, #48dbfb 40%, #1dd1a1 60%, #ff9ff3 80%, #feca57 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2d3436;
+            position: relative;
+            overflow: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            transition: background 1s ease;
+        }
+
+        /* Time of day backgrounds */
+        body.time-night {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #0f2557 75%, #1e3c72 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-morning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #ffeaa7 50%, #74b9ff 75%, #a29bfe 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-day {
+            background: linear-gradient(135deg, #fddb92 0%, #d1fdff 25%, #74b9ff 50%, #a29bfe 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+        }
+
+        body.time-evening {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 25%, #fc6076 50%, #ff9a44 75%, #fa709a 100%);
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating shapes background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image:
+                radial-gradient(circle, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 100px 100px, 50px 50px;
+            background-position: 0 0, 25px 25px;
+            animation: float 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(50px, 50px) rotate(360deg); }
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-screen, .game-screen {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 50px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 10px rgba(255, 255, 255, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.8);
+            border: 5px solid #fff;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1, #ff9ff3);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbowText 3s ease infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes rainbowText {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3em;
+            color: #5f27cd;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        input {
+            font-size: 1.5em;
+            padding: 15px 25px;
+            border: 4px solid #ff6b6b;
+            border-radius: 50px;
+            margin: 10px;
+            font-family: inherit;
+            outline: none;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        input:focus {
+            border-color: #48dbfb;
+            box-shadow: 0 6px 25px rgba(72, 219, 251, 0.5);
+            transform: scale(1.05);
+        }
+
+        button {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff9ff3 100%);
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            font-family: inherit;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            transform: scale(1.1) rotate(-2deg);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        button:active {
+            transform: scale(0.95) rotate(0deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .clock-container {
+            margin: 30px auto;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            50% { transform: scale(1.15) rotate(5deg); }
+            75% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .clock-container.celebrating {
+            animation: celebrate 0.6s ease-out;
+        }
+
+        #clock {
+            background: white;
+            border-radius: 50%;
+            box-shadow:
+                0 10px 50px rgba(0, 0, 0, 0.3),
+                inset 0 0 50px rgba(255, 107, 107, 0.1);
+            border: 8px solid #ff6b6b;
+            transition: border-color 1s ease, box-shadow 1s ease;
+        }
+
+        /* Time of day clock colors */
+        body.time-night #clock {
+            border-color: #2a5298;
+            box-shadow:
+                0 10px 50px rgba(30, 60, 114, 0.5),
+                inset 0 0 50px rgba(42, 82, 152, 0.2),
+                0 0 30px rgba(42, 82, 152, 0.4);
+        }
+
+        body.time-morning #clock {
+            border-color: #ff9a9e;
+            box-shadow:
+                0 10px 50px rgba(255, 154, 158, 0.5),
+                inset 0 0 50px rgba(255, 154, 158, 0.2),
+                0 0 30px rgba(255, 154, 158, 0.4);
+        }
+
+        body.time-day #clock {
+            border-color: #74b9ff;
+            box-shadow:
+                0 10px 50px rgba(116, 185, 255, 0.5),
+                inset 0 0 50px rgba(253, 219, 146, 0.2),
+                0 0 30px rgba(116, 185, 255, 0.4);
+        }
+
+        body.time-evening #clock {
+            border-color: #fc6076;
+            box-shadow:
+                0 10px 50px rgba(252, 96, 118, 0.5),
+                inset 0 0 50px rgba(252, 96, 118, 0.2),
+                0 0 30px rgba(252, 96, 118, 0.4);
+        }
+
+        .clock-number {
+            fill: #5f27cd;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .hour-hand {
+            stroke: #ff6b6b;
+            stroke-width: 10;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px #ff6b6b);
+            transition: all 0.5s ease;
+        }
+
+        .minute-hand {
+            stroke: #48dbfb;
+            stroke-width: 8;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px #48dbfb);
+            transition: all 0.5s ease;
+        }
+
+        .center-dot {
+            fill: #5f27cd;
+            filter: drop-shadow(0 0 5px #5f27cd);
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        select {
+            font-size: 1.2em;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 3px solid #1dd1a1;
+            margin: 10px;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        select:hover {
+            border-color: #ff6b6b;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(29, 209, 161, 0.3);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #ff9ff3;
+            box-shadow: 0 5px 20px rgba(255, 159, 243, 0.5);
+        }
+
+        label {
+            font-size: 1.3em;
+            margin: 0 10px;
+            font-weight: bold;
+            color: #5f27cd;
+        }
+
+        .greeting {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #5f27cd;
+            font-weight: bold;
+            animation: wave 1s ease-in-out;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .flag-button {
+            font-size: 4em;
+            padding: 20px 30px;
+            border: 5px solid transparent;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(72, 219, 251, 0.2));
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .flag-button::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 25px;
+            padding: 5px;
+            background: linear-gradient(135deg, #ff6b6b, #48dbfb, #1dd1a1, #feca57);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .flag-button:hover {
+            transform: scale(1.2) rotate(5deg);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(72, 219, 251, 0.3));
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .flag-button:hover::after {
+            opacity: 1;
+        }
+
+        .flag-button.active {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.4), rgba(255, 159, 243, 0.4));
+            transform: scale(1.25);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.25) translateY(0); }
+            50% { transform: scale(1.25) translateY(-10px); }
+        }
+
+        .clocks-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .digital-clock {
+            background: linear-gradient(135deg, #0f0f0f, #2d3436);
+            border-radius: 20px;
+            padding: 30px 50px;
+            display: inline-block;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(72, 219, 251, 0.3);
+            border: 5px solid #48dbfb;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 1s ease, box-shadow 1s ease;
+        }
+
+        /* Time of day digital clock colors */
+        body.time-night .digital-clock {
+            border-color: #2a5298;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(42, 82, 152, 0.5);
+        }
+
+        body.time-morning .digital-clock {
+            border-color: #ff9a9e;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 154, 158, 0.5);
+        }
+
+        body.time-day .digital-clock {
+            border-color: #74b9ff;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(116, 185, 255, 0.5);
+        }
+
+        body.time-evening .digital-clock {
+            border-color: #fc6076;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(252, 96, 118, 0.5);
+        }
+
+        .digital-clock::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(72, 219, 251, 0.1),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .digital-time {
+            font-family: 'Courier New', monospace;
+            font-size: 4.5em;
+            font-weight: bold;
+            color: #48dbfb;
+            text-shadow:
+                0 0 10px #48dbfb,
+                0 0 20px #48dbfb,
+                0 0 30px #48dbfb,
+                0 0 40px #1dd1a1;
+            letter-spacing: 0.15em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-separator {
+            animation: blink 1.5s infinite;
+            color: #ff6b6b;
+        }
+
+        @keyframes blink {
+            0%, 49% {
+                opacity: 1;
+                text-shadow: 0 0 20px #ff6b6b;
+            }
+            50%, 100% {
+                opacity: 0.2;
+                text-shadow: none;
+            }
+        }
+
+        .speak-button {
+            background: linear-gradient(135deg, #1dd1a1 0%, #48dbfb 100%);
+            font-size: 1.8em;
+            padding: 20px 50px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        .speak-button:hover {
+            animation: wiggle 0.5s ease-in-out infinite;
+            background: linear-gradient(135deg, #48dbfb 0%, #1dd1a1 100%);
+        }
+
+        .language-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            font-size: 1.8em;
+            padding: 8px 12px;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.15);
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .lang-btn.active {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.3);
+        }
+
+        /* Fun decorative elements */
+        .star {
+            position: absolute;
+            font-size: 2em;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .welcome-screen .star:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .welcome-screen .star:nth-child(2) { top: 15%; right: 10%; animation-delay: 0.5s; }
+        .welcome-screen .star:nth-child(3) { bottom: 20%; left: 8%; animation-delay: 1s; }
+        .welcome-screen .star:nth-child(4) { bottom: 15%; right: 5%; animation-delay: 1.5s; }
+
+        /* Mobile Responsive Design - Mobile First Approach */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+                width: 100%;
+            }
+
+            .welcome-screen, .game-screen {
+                padding: 25px 20px;
+                border-radius: 20px;
+                border: 3px solid #fff;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+
+            .welcome-subtitle {
+                font-size: 1em;
+                margin-bottom: 20px;
+            }
+
+            .greeting {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+
+            .language-selector {
+                gap: 15px;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                flex-wrap: wrap;
+            }
+
+            .flag-button {
+                font-size: 2.5em;
+                padding: 15px 25px;
+                border-radius: 15px;
+            }
+
+            .flag-button:hover {
+                transform: scale(1.15) rotate(5deg);
+            }
+
+            .flag-button.active {
+                transform: scale(1.2);
+            }
+
+            .language-switcher {
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .lang-btn {
+                font-size: 1.4em;
+                padding: 6px 10px;
+            }
+
+            label {
+                font-size: 1em;
+                margin: 0;
+                display: inline-block;
+            }
+
+            select {
+                font-size: 1em;
+                padding: 10px 15px;
+                margin: 0;
+                border-radius: 15px;
+            }
+
+            .controls {
+                margin-top: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .control-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: nowrap;
+            }
+
+            .clocks-container {
+                flex-direction: column;
+                gap: 20px;
+                margin: 20px 0;
+            }
+
+            .digital-clock {
+                padding: 20px 30px;
+                border-radius: 15px;
+                width: 100%;
+                max-width: 280px;
+                border: 3px solid #48dbfb;
+            }
+
+            .digital-time {
+                font-size: 2.5em;
+                letter-spacing: 0.1em;
+            }
+
+            #clock {
+                max-width: 280px;
+                height: auto;
+                border: 5px solid #ff6b6b;
+            }
+
+            .clock-container {
+                margin: 20px auto;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .clock-number {
+                font-size: 22px;
+            }
+
+            button {
+                font-size: 1.1em;
+                padding: 12px 30px;
+                margin: 5px;
+            }
+
+            .speak-button {
+                font-size: 1.2em;
+                padding: 15px 35px;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            input {
+                font-size: 1.1em;
+                padding: 12px 20px;
+                margin: 5px;
+            }
+
+            .star {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Extra small mobile devices */
+        @media screen and (max-width: 480px) {
+            .welcome-screen, .game-screen {
+                padding: 20px 15px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.9em;
+                margin-bottom: 15px;
+            }
+
+            .greeting {
+                font-size: 1.1em;
+                margin-bottom: 15px;
+            }
+
+            .language-selector {
+                gap: 10px;
+            }
+
+            .flag-button {
+                font-size: 2em;
+                padding: 12px 20px;
+                border-radius: 12px;
+                border: 3px solid transparent;
+            }
+
+            .language-switcher {
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+
+            .lang-btn {
+                font-size: 1.2em;
+                padding: 5px 8px;
+            }
+
+            .control-group {
+                gap: 5px;
+            }
+
+            label {
+                font-size: 0.9em;
+                margin: 0;
+            }
+
+            select {
+                font-size: 0.9em;
+                padding: 8px 12px;
+                margin: 0;
+                border: 2px solid #1dd1a1;
+            }
+
+            .digital-clock {
+                padding: 15px 20px;
+                max-width: 240px;
+            }
+
+            .digital-time {
+                font-size: 2em;
+            }
+
+            #clock {
+                max-width: 240px;
+            }
+
+            .clock-container {
+                max-width: 240px;
+            }
+
+            .clock-number {
+                font-size: 18px;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 10px 25px;
+            }
+
+            .speak-button {
+                font-size: 1.1em;
+                padding: 12px 25px;
+                max-width: 240px;
+            }
+
+            .star {
+                font-size: 1.2em;
+            }
+
+            .hour-hand {
+                stroke-width: 8;
+            }
+
+            .minute-hand {
+                stroke-width: 6;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .clocks-container {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .digital-clock, .clock-container {
+                max-width: 200px;
+            }
+
+            .digital-time {
+                font-size: 1.8em;
+            }
+
+            #clock {
+                max-width: 200px;
+            }
+
+            .welcome-screen, .game-screen {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="welcomeScreen" class="welcome-screen">
+            <span class="star">⭐</span>
+            <span class="star">🌟</span>
+            <span class="star">✨</span>
+            <span class="star">💫</span>
+
+            <h1>🕐 Learn the Clock! 🕐</h1>
+            <p class="welcome-subtitle">Choose your language to start!</p>
+
+            <div class="language-selector">
+                <button class="flag-button" onclick="selectLanguage('fi-FI')" data-lang="fi-FI">🇫🇮</button>
+                <button class="flag-button" onclick="selectLanguage('en-US')" data-lang="en-US">🇬🇧</button>
+                <button class="flag-button" onclick="selectLanguage('nb-NO')" data-lang="nb-NO">🇳🇴</button>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="game-screen hidden">
+            <div class="language-switcher">
+                <button class="lang-btn" onclick="switchLanguage('fi-FI')" data-lang="fi-FI">🇫🇮</button>
+                <button class="lang-btn" onclick="switchLanguage('en-US')" data-lang="en-US">🇬🇧</button>
+                <button class="lang-btn" onclick="switchLanguage('nb-NO')" data-lang="nb-NO">🇳🇴</button>
+            </div>
+
+            <div class="greeting"><span id="greetingText">Hei</span>! 👋</div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="hourSelect" id="hourLabel">Tunti:</label>
+                    <select id="hourSelect" onchange="updateClock()">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="minuteSelect" id="minuteLabel">Minuutit:</label>
+                    <select id="minuteSelect" onchange="updateClock()">
+                        <option value="0" selected id="min0">00 (tasan)</option>
+                        <option value="5" id="min5">05</option>
+                        <option value="10" id="min10">10</option>
+                        <option value="15" id="min15">15 (varttia yli)</option>
+                        <option value="20" id="min20">20</option>
+                        <option value="25" id="min25">25</option>
+                        <option value="30" id="min30">30 (puoli)</option>
+                        <option value="35" id="min35">35</option>
+                        <option value="40" id="min40">40</option>
+                        <option value="45" id="min45">45 (varttia vaille)</option>
+                        <option value="50" id="min50">50</option>
+                        <option value="55" id="min55">55</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="clocks-container">
+                <div class="digital-clock">
+                    <div class="digital-time">
+                        <span id="digitalHour">03</span><span class="time-separator">:</span><span id="digitalMinute">00</span>
+                    </div>
+                </div>
+
+                <div class="clock-container">
+                    <svg id="clock" width="400" height="400" viewBox="0 0 400 400">
+                        <circle cx="200" cy="200" r="190" fill="white" stroke="#ff6b6b" stroke-width="8"/>
+
+                        <!-- Clock numbers -->
+                        <text x="200" y="60" text-anchor="middle" class="clock-number">12</text>
+                        <text x="285" y="90" text-anchor="middle" class="clock-number">1</text>
+                        <text x="345" y="140" text-anchor="middle" class="clock-number">2</text>
+                        <text x="370" y="210" text-anchor="middle" class="clock-number">3</text>
+                        <text x="345" y="280" text-anchor="middle" class="clock-number">4</text>
+                        <text x="285" y="330" text-anchor="middle" class="clock-number">5</text>
+                        <text x="200" y="360" text-anchor="middle" class="clock-number">6</text>
+                        <text x="115" y="330" text-anchor="middle" class="clock-number">7</text>
+                        <text x="55" y="280" text-anchor="middle" class="clock-number">8</text>
+                        <text x="30" y="210" text-anchor="middle" class="clock-number">9</text>
+                        <text x="55" y="140" text-anchor="middle" class="clock-number">10</text>
+                        <text x="115" y="90" text-anchor="middle" class="clock-number">11</text>
+
+                        <!-- Minute hand (longer, blue) -->
+                        <line id="minuteHand" x1="200" y1="200" x2="200" y2="70"
+                              class="minute-hand"/>
+
+                        <!-- Hour hand (shorter, red) -->
+                        <line id="hourHand" x1="200" y1="200" x2="200" y2="110"
+                              class="hour-hand"/>
+
+                        <!-- Center dot -->
+                        <circle cx="200" cy="200" r="15" class="center-dot"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="speak-button" onclick="tellTime()">🔊 <span id="buttonText">Kerro kellonaika!</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'fi-FI';
+
+        // Helper function to convert 24-hour to 12-hour format
+        function to12Hour(h24) {
+            if (h24 === 0) return 12;
+            if (h24 <= 12) return h24;
+            return h24 - 12;
+        }
+
+        // Helper function to get time period based on hour
+        function getTimePeriod(hour) {
+            if (hour >= 22 || hour < 6) return 'night';      // 22:00-05:59
+            if (hour >= 6 && hour < 12) return 'morning';    // 06:00-11:59
+            if (hour >= 12 && hour < 18) return 'afternoon'; // 12:00-17:59
+            return 'evening';                                 // 18:00-21:59
+        }
+
+        // Helper function to convert numbers to Finnish words
+        function toFinnishWord(num) {
+            const words = {
+                1: 'yksi', 2: 'kaksi', 3: 'kolme', 4: 'neljä',
+                5: 'viisi', 6: 'kuusi', 7: 'seitsemän', 8: 'kahdeksan',
+                9: 'yhdeksän', 10: 'kymmenen', 11: 'yksitoista', 12: 'kaksitoista'
+            };
+            return words[num] || num.toString();
+        }
+
+        const translations = {
+            'en-US': {
+                greeting: 'Hello',
+                hourLabel: 'Hour:',
+                minuteLabel: 'Minutes:',
+                buttonText: 'Tell me the time!',
+                min0: "00 (o'clock)",
+                min5: '05',
+                min10: '10',
+                min15: '15 (quarter past)',
+                min20: '20',
+                min25: '25',
+                min30: '30 (half past)',
+                min35: '35',
+                min40: '40',
+                min45: '45 (quarter to)',
+                min50: '50',
+                min55: '55',
+                timePeriods: {
+                    night: 'at night',
+                    morning: 'in the morning',
+                    afternoon: 'in the afternoon',
+                    evening: 'in the evening'
+                },
+                timeText: {
+                    0: (h) => `${to12Hour(h)} o'clock ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `five past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `ten past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `quarter past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `twenty past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `twenty-five past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `half past ${to12Hour(h)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `twenty-five to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `twenty to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `quarter to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `ten to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `five to ${to12Hour((h + 1) % 24)} ${translations['en-US'].timePeriods[getTimePeriod(h)]}`
+                }
+            },
+            'fi-FI': {
+                greeting: 'Hei',
+                hourLabel: 'Tunti:',
+                minuteLabel: 'Minuutit:',
+                buttonText: 'Kerro kellonaika!',
+                min0: '00 (tasan)',
+                min5: '05',
+                min10: '10',
+                min15: '15 (varttia yli)',
+                min20: '20',
+                min25: '25',
+                min30: '30 (puoli)',
+                min35: '35',
+                min40: '40',
+                min45: '45 (varttia vaille)',
+                min50: '50',
+                min55: '55',
+                timePeriods: {
+                    night: 'yöllä',
+                    morning: 'aamulla',
+                    afternoon: 'iltapäivällä',
+                    evening: 'illalla'
+                },
+                timeText: {
+                    0: (h) => `kello ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `viisi yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `kymmenen yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `varttia yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `kaksikymmentä yli ${toFinnishWord(to12Hour(h))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `viisi vaille puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `viisi yli puoli ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `kaksikymmentä vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `varttia vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `kymmenen vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `viisi vaille ${toFinnishWord(to12Hour((h + 1) % 24))} ${translations['fi-FI'].timePeriods[getTimePeriod(h)]}`
+                }
+            },
+            'nb-NO': {
+                greeting: 'Hei',
+                hourLabel: 'Time:',
+                minuteLabel: 'Minutter:',
+                buttonText: 'Fortell meg hva klokken er!',
+                min0: '00 (klokken)',
+                min5: '05',
+                min10: '10',
+                min15: '15 (kvart over)',
+                min20: '20',
+                min25: '25',
+                min30: '30 (halv)',
+                min35: '35',
+                min40: '40',
+                min45: '45 (kvart på)',
+                min50: '50',
+                min55: '55',
+                timePeriods: {
+                    night: 'om natten',
+                    morning: 'om morgenen',
+                    afternoon: 'om ettermiddagen',
+                    evening: 'om kvelden'
+                },
+                timeText: {
+                    0: (h) => `klokken ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    5: (h) => `fem over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    10: (h) => `ti over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    15: (h) => `kvart over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    20: (h) => `tjue over ${to12Hour(h)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    25: (h) => `fem på halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    30: (h) => `halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    35: (h) => `fem over halv ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    40: (h) => `tjue på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    45: (h) => `kvart på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    50: (h) => `ti på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`,
+                    55: (h) => `fem på ${to12Hour((h + 1) % 24)} ${translations['nb-NO'].timePeriods[getTimePeriod(h)]}`
+                }
+            }
+        };
+
+        function selectLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            updateLanguageButtons();
+            updateUIText();
+            updateClock();
+        }
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            updateLanguageButtons();
+            updateUIText();
+        }
+
+        function updateLanguageButtons() {
+            document.querySelectorAll('.flag-button, .lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+        }
+
+        function updateUIText() {
+            const trans = translations[currentLang];
+            document.getElementById('greetingText').textContent = trans.greeting;
+            document.getElementById('hourLabel').textContent = trans.hourLabel;
+            document.getElementById('minuteLabel').textContent = trans.minuteLabel;
+            document.getElementById('buttonText').textContent = trans.buttonText;
+            document.getElementById('min0').textContent = trans.min0;
+            document.getElementById('min5').textContent = trans.min5;
+            document.getElementById('min10').textContent = trans.min10;
+            document.getElementById('min15').textContent = trans.min15;
+            document.getElementById('min20').textContent = trans.min20;
+            document.getElementById('min25').textContent = trans.min25;
+            document.getElementById('min30').textContent = trans.min30;
+            document.getElementById('min35').textContent = trans.min35;
+            document.getElementById('min40').textContent = trans.min40;
+            document.getElementById('min45').textContent = trans.min45;
+            document.getElementById('min50').textContent = trans.min50;
+            document.getElementById('min55').textContent = trans.min55;
+        }
+
+        const hourHand = document.getElementById('hourHand');
+        const minuteHand = document.getElementById('minuteHand');
+        const centerX = 200;
+        const centerY = 200;
+
+        function setHandPosition(hand, angle, length) {
+            const radians = (angle - 90) * (Math.PI / 180);
+            const x = centerX + length * Math.cos(radians);
+            const y = centerY + length * Math.sin(radians);
+            hand.setAttribute('x2', x);
+            hand.setAttribute('y2', y);
+        }
+
+        function updateClock() {
+            const hour = parseInt(document.getElementById('hourSelect').value);
+            const minutes = parseInt(document.getElementById('minuteSelect').value);
+
+            const minuteAngle = minutes * 6;
+            setHandPosition(minuteHand, minuteAngle, 130);
+
+            const hourAngle = (hour % 12) * 30 + (minutes / 60) * 30;
+            setHandPosition(hourHand, hourAngle, 90);
+
+            // Update digital clock display
+            document.getElementById('digitalHour').textContent = hour.toString().padStart(2, '0');
+            document.getElementById('digitalMinute').textContent = minutes.toString().padStart(2, '0');
+
+            // Update background and clock colors based on time of day
+            const body = document.body;
+            body.classList.remove('time-night', 'time-morning', 'time-day', 'time-evening');
+
+            if (hour >= 22 || hour < 6) {
+                body.classList.add('time-night');
+            } else if (hour >= 6 && hour < 12) {
+                body.classList.add('time-morning');
+            } else if (hour >= 12 && hour < 18) {
+                body.classList.add('time-day');
+            } else if (hour >= 18 && hour < 22) {
+                body.classList.add('time-evening');
+            }
+        }
+
+        function tellTime() {
+            const hour = parseInt(document.getElementById('hourSelect').value);
+            const minutes = parseInt(document.getElementById('minuteSelect').value);
+
+            // Trigger celebration animation
+            const clockContainer = document.querySelector('.clock-container');
+            clockContainer.classList.remove('celebrating');
+            // Force reflow to restart animation
+            void clockContainer.offsetWidth;
+            clockContainer.classList.add('celebrating');
+
+            // Remove animation class after it completes
+            setTimeout(() => {
+                clockContainer.classList.remove('celebrating');
+            }, 600);
+
+            // Get natural language time text for the current language
+            const timeText = translations[currentLang].timeText[minutes](hour);
+
+            const utterance = new SpeechSynthesisUtterance(timeText);
+            utterance.lang = currentLang;
+            utterance.rate = 0.9;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
